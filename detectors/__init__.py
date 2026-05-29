@@ -1,4 +1,4 @@
-import fitz
+from utils.pdf_to_text import extract as _pdf_to_text
 
 from .llm_text import analyze as _llm
 from .similarity import analyze as _sim
@@ -7,13 +7,12 @@ from .whois_check import analyze as _whois
 
 
 async def run_all(pdf_bytes: bytes, jd: str, email: str = "") -> dict:
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    resume_text = "\n".join(page.get_text() for page in doc)
+    resume_text = await _pdf_to_text(pdf_bytes)
 
     results: dict = {}
 
-    # High priority
-    results["llm_detection"] = _llm(resume_text, jd).model_dump()
+    # High priority — both async now
+    results["llm_detection"] = (await _llm(resume_text, jd)).model_dump()
     results["cross_resume_similarity"] = _sim(resume_text, jd).model_dump()
 
     # Medium priority

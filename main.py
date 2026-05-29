@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()  # must run before any module reads os.getenv
+
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
