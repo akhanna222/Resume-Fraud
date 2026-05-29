@@ -11,9 +11,9 @@ async def run_all(pdf_bytes: bytes, jd: str, email: str = "") -> dict:
 
     results: dict = {}
 
-    # High priority — both async now
+    # High priority — all async
     results["llm_detection"] = (await _llm(resume_text, jd)).model_dump()
-    results["cross_resume_similarity"] = _sim(resume_text, jd).model_dump()
+    results["cross_resume_similarity"] = (await _sim(resume_text, jd)).model_dump()
 
     # Medium priority
     results["pdf_scanner"] = _pdf(pdf_bytes).model_dump()
